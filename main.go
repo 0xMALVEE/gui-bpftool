@@ -34,3 +34,9 @@ func main() {
 		println("Error:", err.Error())
 	}
 }
+
+// func main() {
+// 	pinfo, _ := bpfprog.GetProgListWithInfo()
+
+// 	fmt.Printf("%+v\n", pinfo[0].Name)
+// }

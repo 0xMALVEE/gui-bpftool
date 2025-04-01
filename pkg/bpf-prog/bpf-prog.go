@@ -13,7 +13,7 @@ func GetAllBpfProgList() []ebpf.ProgramID {
 	for {
 		progId, err := ebpf.ProgramGetNextID(startId)
 		if err != nil {
-			fmt.Println(err.Error())
+			fmt.Println("Error getting next bpf program: ", err.Error())
 			break
 		}
 		ebpfProgList = append(ebpfProgList, progId)
@@ -29,4 +29,20 @@ func GetProgInfo(id ebpf.ProgramID) (*ebpf.ProgramInfo, error) {
 	}
 	progInfo, err := prog.Info()
 	return progInfo, err
+}
+
+func GetProgListWithInfo() ([]*ebpf.ProgramInfo, error) {
+	progList := GetAllBpfProgList()
+	porgListInfo := []*ebpf.ProgramInfo{}
+
+	for _, id := range progList {
+		info, err := GetProgInfo(id)
+		if err != nil {
+			return nil, err
+		}
+
+		porgListInfo = append(porgListInfo, info)
+	}
+
+	return porgListInfo, nil
 }
