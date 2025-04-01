@@ -8,6 +8,9 @@ all: build run
 
 dev: build run
 
+go:
+	go build && sudo ./gui-bpftool
+
 build:
 	wails build -devtools -tags debug
 
