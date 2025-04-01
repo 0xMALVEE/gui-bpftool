@@ -31,18 +31,15 @@ func GetProgInfo(id ebpf.ProgramID) (*ebpf.ProgramInfo, error) {
 	return progInfo, err
 }
 
-func GetProgListWithInfo() ([]*ebpf.ProgramInfo, error) {
+func GetProgListWithInfo() ([]ProgramInfo, error) {
 	progList := GetAllBpfProgList()
-	porgListInfo := []*ebpf.ProgramInfo{}
-
+	porgListInfo := []ProgramInfo{}
 	for _, id := range progList {
 		info, err := GetProgInfo(id)
 		if err != nil {
 			return nil, err
 		}
-
-		porgListInfo = append(porgListInfo, info)
+		porgListInfo = append(porgListInfo, ProgramInfo{Type: GetProgramTypeString(info.Type), ProgramInfo: info})
 	}
-
 	return porgListInfo, nil
 }
