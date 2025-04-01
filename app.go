@@ -29,9 +29,7 @@ func (a *App) Greet(name string) string {
 	return fmt.Sprintf("Hello %s, It's show time!", name)
 }
 
-func (a *App) GetEbpfProgList() []ebpf.ProgramID {
-
-	ebpfList := bpfprog.GetAllBpfProgList()
-
+func (a *App) GetEbpfProgList() []*ebpf.ProgramInfo {
+	ebpfList, _ := bpfprog.GetProgListWithInfo()
 	return ebpfList
 }

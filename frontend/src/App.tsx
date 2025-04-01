@@ -2,15 +2,15 @@ import {useEffect, useState} from 'react';
 import logo from './assets/images/logo-universal.png';
 import './App.css';
 import {GetEbpfProgList} from "../wailsjs/go/main/App";
+import { ebpf } from '../wailsjs/go/models';
 
 function App() {
-    const [resultText, setResultText] = useState("Please enter your name below 👇");
-    const [name, setName] = useState('');
+    const [progList, setProgList] = useState<ebpf.ProgramInfo[]>()
     
 
     function greet() {
         GetEbpfProgList().then(progList => {
-            setName(progList.join("--"))
+            setProgList(progList)
         })
     }
 
@@ -19,11 +19,18 @@ function App() {
     })
 
     return (
-        <div id="App">
+        <div id="App" className='text-red-500'>
             prog list :
-            {name}
+            {progList?.map(prog=> <div>
+                Name: {prog.Name}
+                Type: {prog.Type}
+                Tag: {prog.Type}
+            </div>)}
         </div>
     )
 }
+
+
+
 
 export default App
