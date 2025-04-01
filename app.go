@@ -4,8 +4,6 @@ import (
 	"context"
 	"fmt"
 	bpfprog "gui-bpftool/pkg/bpf-prog"
-
-	"github.com/cilium/ebpf"
 )
 
 // App struct
@@ -29,7 +27,7 @@ func (a *App) Greet(name string) string {
 	return fmt.Sprintf("Hello %s, It's show time!", name)
 }
 
-func (a *App) GetEbpfProgList() []*ebpf.ProgramInfo {
+func (a *App) GetEbpfProgList() []bpfprog.ProgramInfo {
 	ebpfList, _ := bpfprog.GetProgListWithInfo()
 	return ebpfList
 }

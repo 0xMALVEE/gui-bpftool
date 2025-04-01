@@ -2,10 +2,10 @@ import {useEffect, useState} from 'react';
 import logo from './assets/images/logo-universal.png';
 import './App.css';
 import {GetEbpfProgList} from "../wailsjs/go/main/App";
-import { ebpf } from '../wailsjs/go/models';
+import { bpfprog, ebpf } from '../wailsjs/go/models';
 
 function App() {
-    const [progList, setProgList] = useState<ebpf.ProgramInfo[]>()
+    const [progList, setProgList] = useState<bpfprog.ProgramInfo[]>()
     
 
     function greet() {
@@ -32,7 +32,7 @@ function App() {
                 key={index} 
                 className="bg-gradient-to-br from-blue-50 to-indigo-50 p-4 rounded-lg shadow hover:shadow-md transition-all duration-200 border border-blue-100"
               >
-                <h2 className="font-semibold text-lg text-blue-700 mb-2">{prog.Name}</h2>
+                <h2 className="font-semibold text-lg text-blue-700 mb-2">{prog.ProgramInfo?.Name}</h2>
                 <div className="space-y-2">
                   <div className="flex items-center">
                     <span className="text-gray-600 w-16">Type:</span>
@@ -40,7 +40,7 @@ function App() {
                   </div>
                   <div className="flex items-center">
                     <span className="text-gray-600 w-16">Tag:</span>
-                    <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm font-medium">{prog.Type}</span>
+                    <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm font-medium">{prog.ProgramInfo?.Tag}</span>
                   </div>
                 </div>
               </div>
