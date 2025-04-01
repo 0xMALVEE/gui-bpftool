@@ -6,8 +6,10 @@ EXECUTABLE = $(BUILD_DIR)/$(APP_NAME)
 
 all: build run
 
+dev: build run
+
 build:
-	wails build
+	wails build -devtools -tags debug
 
 run: build
 	sudo $(EXECUTABLE)

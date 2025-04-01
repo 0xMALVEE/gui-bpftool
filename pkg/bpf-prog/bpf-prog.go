@@ -21,3 +21,12 @@ func GetAllBpfProgList() []ebpf.ProgramID {
 	}
 	return ebpfProgList
 }
+
+func GetProgInfo(id ebpf.ProgramID) (*ebpf.ProgramInfo, error) {
+	prog, err := ebpf.NewProgramFromID(id)
+	if err != nil {
+		return nil, err
+	}
+	progInfo, err := prog.Info()
+	return progInfo, err
+}
