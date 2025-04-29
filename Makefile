@@ -6,4 +6,4 @@ EXECUTABLE = $(BUILD_DIR)/$(APP_NAME)
 
 
 go:
-	go run .
+	go build . && sudo ./gui-bpftool

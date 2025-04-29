@@ -1,19 +1,31 @@
 package main
 
 import (
-	"fmt"
+	bpfprog "gui-bpftool/pkg/bpf-prog"
 
+	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/widget"
 )
 
 func main() {
-	fmt.Print("Hello World, First!\n")
 	a := app.New()
-	w := a.NewWindow("Hello World")
+	w := a.NewWindow("guibpftool")
+	w.Resize(fyne.NewSize(800, 600))
 
-	fmt.Print("Hello World!\n")
+	ebpgProgList, _ := bpfprog.GetProgListWithInfo()
 
-	w.SetContent(widget.NewLabel("Hello World!"))
+	list := widget.NewList(
+		func() int {
+			return len(ebpgProgList)
+		},
+		func() fyne.CanvasObject {
+			return widget.NewLabel("template")
+		},
+		func(i widget.ListItemID, o fyne.CanvasObject) {
+			o.(*widget.Label).SetText(ebpgProgList[i].ProgramInfo.Name)
+		})
+
+	w.SetContent(list)
 	w.ShowAndRun()
 }
