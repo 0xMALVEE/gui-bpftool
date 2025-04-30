@@ -1,18 +1,21 @@
 package main
 
 import (
+	"tui-bpftool/internal"
+	"tui-bpftool/internal/app"
+	"tui-bpftool/internal/mapsview"
 	"tui-bpftool/internal/proglist"
-
-	"github.com/rivo/tview"
 )
 
 func main() {
-	app := tview.NewApplication()
-	app.EnableMouse(true)
+	app := app.Application{CurrentView: internal.ProgramListView}
+	app.NewApplication()
 
-	progListView := proglist.GetProgListView(app)
+	// set the views
+	app.ProgListView = proglist.GetProgListView(&app)
+	app.MapsView = mapsview.GetMapsView(&app)
 
-	if err := app.SetRoot(progListView, true).Run(); err != nil {
+	if err := app.App.SetRoot(app.ProgListView, true).Run(); err != nil {
 		panic(err)
 	}
 }
