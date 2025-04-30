@@ -1,7 +1,7 @@
 package bpfmaps
 
 import (
-	bpfprog "gui-bpftool/pkg/bpf-prog"
+	bpfprog "tui-bpftool/pkg/bpf-prog"
 
 	"github.com/cilium/ebpf"
 )
