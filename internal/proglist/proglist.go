@@ -4,8 +4,13 @@ import (
 	"fmt"
 	"os/user"
 	"strconv"
+
+	"tui-bpftool/internal"
+	"tui-bpftool/internal/app"
+
 	bpfprog "tui-bpftool/pkg/bpf-prog"
 
+	"github.com/cilium/ebpf"
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 )
@@ -18,7 +23,8 @@ func getUsernameFromUID(uid uint32) (string, error) {
 	return usr.Username, nil
 }
 
-func GetProgListView(app *tview.Application) *tview.Flex {
+func GetProgListView(app *app.Application) *tview.Flex {
+	tviewApp := app.App
 	searchBpf := tview.NewInputField().
 		SetLabel("Search: ").
 		SetPlaceholder("Enter program name").
@@ -50,9 +56,14 @@ func GetProgListView(app *tview.Application) *tview.Flex {
 
 	bpfListTable.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if event.Key() == tcell.KeyEnter {
-			row, col := bpfListTable.GetSelection()
-			n := bpfListTable.GetCell(row, col).Text
-			fmt.Println("clicked enter", row, col, n)
+			row, _ := bpfListTable.GetSelection()
+			n := bpfListTable.GetCell(row, 2).Text
+			progID, _ := strconv.Atoi(n)
+			app.SelectedProgramID = ebpf.ProgramID(progID)
+			app.SetCurrentView(func() {
+				app.CurrentView = internal.ProgramMapsView
+				app.App.SetRoot(app.MapsView, true)
+			})
 		}
 		return event
 	})
@@ -67,13 +78,13 @@ func GetProgListView(app *tview.Application) *tview.Flex {
 
 	layout := tview.NewFlex().SetDirection(tview.FlexRow).AddItem(searchBpf, 1, 0, false).AddItem(bpfListTable, 0, 1, true)
 
-	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+	tviewApp.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if event.Key() == tcell.KeyTab {
 			if bpfListTable.HasFocus() {
-				app.SetFocus(searchBpf)
+				tviewApp.SetFocus(searchBpf)
 				return nil
 			}
-			app.SetFocus(bpfListTable)
+			tviewApp.SetFocus(bpfListTable)
 			return nil
 		}
 		return event
