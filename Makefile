@@ -1,4 +1,4 @@
-APP_NAME = gui-bpftool
+APP_NAME = tui-bpftool
 BUILD_DIR = build/bin
 EXECUTABLE = $(BUILD_DIR)/$(APP_NAME)
 
@@ -6,4 +6,4 @@ EXECUTABLE = $(BUILD_DIR)/$(APP_NAME)
 
 
 go:
-	go build . && sudo ./gui-bpftool
+	go build . && sudo ./tui-bpftool
