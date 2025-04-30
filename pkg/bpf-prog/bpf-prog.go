@@ -1,7 +1,6 @@
 package bpfprog
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/cilium/ebpf"
@@ -14,7 +13,7 @@ func GetAllBpfProgList() []ebpf.ProgramID {
 	for {
 		progId, err := ebpf.ProgramGetNextID(startId)
 		if err != nil {
-			fmt.Println("Error getting next bpf program: ", err.Error())
+			// fmt.Println("Error getting next bpf program: ", err.Error())
 			break
 		}
 		ebpfProgList = append(ebpfProgList, progId)

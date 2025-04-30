@@ -3,10 +3,13 @@ package main
 import (
 	bpfprog "tui-bpftool/pkg/bpf-prog"
 
+	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 )
 
 func main() {
+	app := tview.NewApplication()
+
 	searchBpf := tview.NewInputField().
 		SetLabel("Search: ").
 		SetPlaceholder("Enter program name").
@@ -39,7 +42,19 @@ func main() {
 
 	layout := tview.NewFlex().SetDirection(tview.FlexRow).AddItem(searchBpf, 1, 0, false).AddItem(bpfListTable, 0, 1, true)
 
-	if err := tview.NewApplication().SetRoot(layout, true).SetFocus(searchBpf).Run(); err != nil {
+	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		if event.Key() == tcell.KeyTab {
+			if bpfListTable.HasFocus() {
+				app.SetFocus(searchBpf)
+				return nil
+			}
+			app.SetFocus(bpfListTable)
+			return nil
+		}
+		return event
+	})
+
+	if err := app.SetRoot(layout, true).SetFocus(searchBpf).Run(); err != nil {
 		panic(err)
 	}
 }
