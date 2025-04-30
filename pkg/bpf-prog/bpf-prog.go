@@ -2,6 +2,7 @@ package bpfprog
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/cilium/ebpf"
 )
@@ -31,13 +32,16 @@ func GetProgInfo(id ebpf.ProgramID) (*ebpf.ProgramInfo, error) {
 	return progInfo, err
 }
 
-func GetProgListWithInfo() ([]ProgramInfo, error) {
+func GetProgListWithInfo(programName string) ([]ProgramInfo, error) {
 	progList := GetAllBpfProgList()
 	porgListInfo := []ProgramInfo{}
 	for _, id := range progList {
 		info, err := GetProgInfo(id)
 		if err != nil {
 			return nil, err
+		}
+		if !strings.Contains(info.Name, programName) {
+			continue
 		}
 		porgListInfo = append(porgListInfo, ProgramInfo{Type: GetProgramTypeString(info.Type), ProgramInfo: info})
 	}

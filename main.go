@@ -7,22 +7,39 @@ import (
 )
 
 func main() {
+	searchBpf := tview.NewInputField().
+		SetLabel("Search: ").
+		SetPlaceholder("Enter program name").
+		SetFieldWidth(30)
 
-	// box := tview.NewBox().SetBorder(true).SetTitle("tui-bpftool!")
+	bpfListTable := tview.NewTable().SetSelectable(true, false)
 
-	table := tview.NewTable().SetBorders(true).SetSelectable(true, false)
+	fillBpfListTable := func(programName string) {
+		bpfListTable.Clear()
+		bpfListTable.SetCell(0, 0, tview.NewTableCell("Name").SetTextColor(tview.Styles.PrimaryTextColor))
+		bpfListTable.SetCell(0, 1, tview.NewTableCell("Type").SetTextColor(tview.Styles.PrimaryTextColor))
 
-	table.SetCell(0, 0, tview.NewTableCell("Programs List").SetTextColor(tview.Styles.PrimaryTextColor))
-	table.SetCell(0, 1, tview.NewTableCell("Type").SetTextColor(tview.Styles.PrimaryTextColor))
+		ebpgProgList, _ := bpfprog.GetProgListWithInfo(programName)
 
-	ebpgProgList, _ := bpfprog.GetProgListWithInfo()
-
-	for i, prog := range ebpgProgList {
-		table.SetCell(i+1, 0, tview.NewTableCell(prog.ProgramInfo.Name).SetTextColor(tview.Styles.PrimaryTextColor))
-		table.SetCell(i+1, 1, tview.NewTableCell(prog.Type).SetTextColor(tview.Styles.PrimaryTextColor))
+		for i, prog := range ebpgProgList {
+			bpfListTable.SetCell(i+1, 0, tview.NewTableCell(prog.ProgramInfo.Name).SetTextColor(tview.Styles.PrimaryTextColor))
+			bpfListTable.SetCell(i+1, 1, tview.NewTableCell(prog.Type).SetTextColor(tview.Styles.PrimaryTextColor))
+		}
 	}
 
-	if err := tview.NewApplication().SetRoot(table, true).Run(); err != nil {
+	fillBpfListTable("")
+
+	searchBpf.SetChangedFunc(func(text string) {
+		if text == "" {
+			fillBpfListTable("")
+			return
+		}
+		fillBpfListTable(text)
+	})
+
+	layout := tview.NewFlex().SetDirection(tview.FlexRow).AddItem(searchBpf, 1, 0, false).AddItem(bpfListTable, 0, 1, true)
+
+	if err := tview.NewApplication().SetRoot(layout, true).SetFocus(searchBpf).Run(); err != nil {
 		panic(err)
 	}
 }
